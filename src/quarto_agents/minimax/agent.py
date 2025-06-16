@@ -32,8 +32,12 @@ class Agent(QuartoAgent):
         depth_limits: Tuple[int, int, int] = (2, 3, 5),
     ):
         super().__init__()
-        logger.info("Initializing Minimax Agent")
+        if len(depth_limits) != 3:
+            raise ValueError("depth_limits must be a tuple/list of three integers (early, mid, late game depth limits)")
         self.depth_limits = depth_limits
+        logger.info(
+            f"Initializing Minimax Agent with Depth Limits of {depth_limits}",
+        )
         self._random = Random()
         self.cache: dict[Agent.GAME_STATE_CACHE_KEY, Agent.MINIMAX_EVALUATION_RESULT] = {}
 

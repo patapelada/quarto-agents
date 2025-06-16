@@ -10,7 +10,7 @@ from quarto_lib import (
     piece_to_parts,
 )
 
-from agents.interactive.utils import draw_board, piece_to_unicode
+from quarto_agents.interactive.utils import draw_board, piece_to_unicode
 
 
 class Agent(QuartoAgent):

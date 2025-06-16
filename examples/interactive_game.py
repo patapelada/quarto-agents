@@ -2,9 +2,9 @@ import logging
 
 from quarto_lib import Arena
 
-from agents.interactive.agent import Agent as InteractiveAgent
-from agents.interactive.utils import draw_board
-from agents.minimax.agent import Agent as MiniMaxAgent
+from quarto_agents.interactive.agent import Agent as InteractiveAgent
+from quarto_agents.interactive.utils import draw_board
+from quarto_agents.minimax.agent import Agent as MiniMaxAgent
 
 logging.basicConfig(level=logging.INFO)
 
