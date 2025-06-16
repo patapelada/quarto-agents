@@ -3,7 +3,7 @@ import os
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from quarto_lib import ChooseInitialPieceResponse, CompleteTurnResponse, GameState
+from quarto_lib import AgentHealthResponse, ChooseInitialPieceResponse, CompleteTurnResponse, GameState
 
 from quarto_agents.agent_loader import get_agent
 
@@ -21,22 +21,19 @@ app.add_middleware(
 agent = get_agent()
 
 
-@app.get(
-    "/",
-    tags=["health"],
-)
-def health_check():
-    return {
-        "status": "ok",
-        "agent": agent.identifier,
-    }
+@app.get("/", tags=["health"], response_model=AgentHealthResponse)
+def health_check() -> AgentHealthResponse:
+    return AgentHealthResponse(
+        status="ok",
+        identifier=agent.identifier,
+    )
 
 
 @app.post(
     "/choose-initial-piece",
     response_model=ChooseInitialPieceResponse,
 )
-def choose_initial_piece():
+def choose_initial_piece() -> ChooseInitialPieceResponse:
     return agent.choose_initial_piece()
 
 
@@ -44,5 +41,5 @@ def choose_initial_piece():
     "/complete-turn",
     response_model=CompleteTurnResponse,
 )
-def complete_turn(game: GameState):
+def complete_turn(game: GameState) -> CompleteTurnResponse:
     return agent.complete_turn(game)
