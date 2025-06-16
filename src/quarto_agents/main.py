@@ -21,6 +21,17 @@ app.add_middleware(
 agent = get_agent()
 
 
+@app.get(
+    "/",
+    tags=["health"],
+)
+def health_check():
+    return {
+        "status": "ok",
+        "agent": agent.identifier,
+    }
+
+
 @app.post(
     "/choose-initial-piece",
     response_model=ChooseInitialPieceResponse,

@@ -43,6 +43,13 @@ def get_agent() -> QuartoAgent:
     if not issubclass(agent_cls, QuartoAgent):
         raise TypeError(f"{class_name} is not a subclass of QuartoAgent")
 
+    try:
+        version_module = importlib.import_module(f"{module_path.rsplit('.', 1)[0]}.__version__")
+        agent_version = getattr(version_module, "__version__", "unknown")
+    except ModuleNotFoundError:
+        agent_version = "unknown"
+    identifier = f"{module_path.rsplit('.', 1)[0]}:v{agent_version}"
+
     agent_kwargs = _get_agent_kwargs()
-    logger.info(f"Creating agent {module.__name__} with arguments: {agent_kwargs}")
-    return agent_cls(**agent_kwargs)
+    logger.info(f"Creating agent {identifier} with arguments: {agent_kwargs}")
+    return agent_cls(identifier=identifier, **agent_kwargs)

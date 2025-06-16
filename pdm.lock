@@ -820,7 +820,7 @@ files = [
 
 [[package]]
 name = "quarto-lib"
-version = "3.1.2"
+version = "3.2.0"
 requires_python = "==3.13.*"
 summary = "Common library for Quarto-Games projects."
 groups = ["default"]
@@ -828,8 +828,8 @@ dependencies = [
     "pydantic>=2.11.7",
 ]
 files = [
-    {file = "quarto_lib-3.1.2-py3-none-any.whl", hash = "sha256:9ff50cc9c72a473e36e93e76befc68305438b8ee33b9125743884071520fe9d8"},
-    {file = "quarto_lib-3.1.2.tar.gz", hash = "sha256:abf3e6e67139e1e95d79ffef78ec5ec716039bccf434e2b81cc92db0cdfaf574"},
+    {file = "quarto_lib-3.2.0-py3-none-any.whl", hash = "sha256:6da654b94e10ad33ca182942d2cc4b41108ebf0bcf4dad8238a2e1ed514bfd5b"},
+    {file = "quarto_lib-3.2.0.tar.gz", hash = "sha256:cf3497626734bde6eb575e08011b2346d6e1bf06b0ad153bec4ca2a1e968db1d"},
 ]
 
 [[package]]
