@@ -3,12 +3,25 @@ from enum import Enum
 from random import Random
 from typing import Callable, Optional, Tuple
 
-from quarto_lib import Cell, GameState, InformalAgentInterface, Piece, check_win, common_characteristics, get_all_lines
+from quarto_lib import (
+    Board,
+    Cell,
+    ChooseInitialPieceResponse,
+    CompleteTurnResponse,
+    GameState,
+    Piece,
+    QuartoAgent,
+    check_win,
+    common_characteristics,
+    get_all_lines,
+    get_available_cells,
+    get_available_pieces,
+)
 
 logger = logging.getLogger(__name__)
 
 
-class Agent(InformalAgentInterface):
+class Agent(QuartoAgent):
     WIN_SCORE = 1000
     LOSE_SCORE = -1000
     GAME_STATE_CACHE_KEY = Tuple[Tuple[Tuple[Optional[Piece], ...], ...], Optional[Piece], bool, int]
@@ -24,22 +37,23 @@ class Agent(InformalAgentInterface):
         self._random = Random()
         self.cache: dict[Agent.GAME_STATE_CACHE_KEY, Agent.MINIMAX_EVALUATION_RESULT] = {}
 
-    def choose_initial_piece(self) -> Piece:
-        return self._random.choice(list(Piece))
+    def choose_initial_piece(self) -> ChooseInitialPieceResponse:
+        selected_piece = self._random.choice(list(Piece))
+        return ChooseInitialPieceResponse(piece=selected_piece)
 
-    def complete_turn(self, game: GameState) -> Tuple[Cell, Optional[Piece]]:
+    def complete_turn(self, game: GameState) -> CompleteTurnResponse:
         # Assess game phase
         game_phase = self.evaluate_game_phase(game)
-        logger.debug("Game phase evaluated as: %s (%d | 16)", game_phase.name, len(game.available_cells))
+        logger.debug("Game phase evaluated as: %s (%d | 16)", game_phase.name, len(get_available_cells(game)))
 
         depth_limit = self.depth_limits[0]
 
-        def evaluation_function(board: GameState.Board) -> int:
+        def evaluation_function(board: Board) -> int:
             return self.evaluate_board(board)
 
         if game_phase == self.GamePhase.EARLY_GAME:
 
-            def evaluation_function(board: GameState.Board) -> int:
+            def evaluation_function(board: Board) -> int:
                 return self.evaluate_board(board) * -1
 
         if game_phase == self.GamePhase.LATE_GAME:
@@ -50,8 +64,8 @@ class Agent(InformalAgentInterface):
 
         score, cell, piece = self.minimax(
             game.board,
-            game.available_pieces,
-            game.available_cells,
+            get_available_pieces(game),
+            get_available_cells(game),
             game.current_piece,
             True,
             depth_limit,
@@ -63,19 +77,22 @@ class Agent(InformalAgentInterface):
         if cell is None:
             raise ValueError("No valid move found. This should not happen with a properly implemented minimax.")
 
-        return (cell, piece)
+        return CompleteTurnResponse(
+            cell=cell,
+            piece=piece,
+        )
 
     @classmethod
     def minimax(
         cls,
-        board: GameState.Board,
+        board: Board,
         available_pieces: set[Piece],
         available_cells: set[Cell],
         current_piece: Optional[Piece],
         maximizing: bool,
         depth: int,
         cache: dict[GAME_STATE_CACHE_KEY, MINIMAX_EVALUATION_RESULT],
-        evaluation_function: Callable[[GameState.Board], int],
+        evaluation_function: Callable[[Board], int],
         alpha: float = float("-inf"),
         beta: float = float("inf"),
     ) -> MINIMAX_EVALUATION_RESULT:
@@ -136,7 +153,7 @@ class Agent(InformalAgentInterface):
         return cache[key]
 
     @classmethod
-    def evaluate_board(cls, board: GameState.Board) -> int:
+    def evaluate_board(cls, board: Board) -> int:
         """
         Heuristic evaluation of a Quarto board.
         +10 for each line with 3 same-bit pieces and one empty
@@ -167,7 +184,7 @@ class Agent(InformalAgentInterface):
         n_three_same = sum(1 for line in lines_with_common_pieces if len([p for p in line if p is not None]) == 3)
         n_two_same = sum(1 for line in lines_with_common_pieces if len([p for p in line if p is not None]) == 2)
 
-        if n_three_same > 2 or len(game.available_cells) <= 8:
+        if n_three_same > 2 or len(get_available_cells(game)) <= 8:
             return cls.GamePhase.LATE_GAME
         if n_two_same > 0:
             return cls.GamePhase.MID_GAME

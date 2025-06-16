@@ -1,34 +1,42 @@
-from typing import Optional, Tuple
-
 import questionary
-from quarto_lib import Cell, GameState, InformalAgentInterface, Piece, piece_to_parts
+from quarto_lib import (
+    ChooseInitialPieceResponse,
+    CompleteTurnResponse,
+    GameState,
+    Piece,
+    QuartoAgent,
+    get_available_cells,
+    get_available_pieces,
+    piece_to_parts,
+)
 
 from agents.interactive.utils import draw_board, piece_to_unicode
 
 
-class Agent(InformalAgentInterface):
+class Agent(QuartoAgent):
     def __init__(self):
         super().__init__()
 
     def choose_initial_piece(
         self,
-    ) -> Piece:
+    ) -> ChooseInitialPieceResponse:
         choices = self.pieces_to_choices(list(Piece))
         selected_piece = questionary.select("Choose your initial piece:", choices=choices).ask()
-        return selected_piece
+        return ChooseInitialPieceResponse(piece=selected_piece)
 
-    def complete_turn(self, game: GameState) -> Tuple[Cell, Optional[Piece]]:
+    def complete_turn(self, game: GameState) -> CompleteTurnResponse:
         print("\033c", end="")  # ANSI escape code to clear the console
         print(draw_board(game.board))
 
+        avaliable_pieces = get_available_pieces(game)
         print("Piece to place:", piece_to_unicode(game.current_piece))
         print(
             "Remaining pieces:",
-            " ".join(piece_to_unicode(p) for p in sorted(game.available_pieces, key=lambda p: p.value)),
+            " ".join(piece_to_unicode(p) for p in sorted(avaliable_pieces, key=lambda p: p.value)),
         )
         cell_choices = [
             questionary.Choice(title=str(cell.name), value=cell)
-            for cell in sorted(game.available_cells, key=lambda c: c.name)
+            for cell in sorted(get_available_cells(game), key=lambda c: c.name)
         ]
         selected_cell = questionary.select("Choose a cell to place your piece:", choices=cell_choices).ask()
 
@@ -37,11 +45,11 @@ class Agent(InformalAgentInterface):
         print("\033c", end="")  # ANSI escape code to clear the console
         print(draw_board(updated_board))
 
-        pieces = list(game.available_pieces)
+        pieces = list(avaliable_pieces)
         choices = self.pieces_to_choices(pieces)
         selected_piece = questionary.select("Choose a piece for your opponent:", choices=choices).ask()
 
-        return selected_cell, selected_piece
+        return CompleteTurnResponse(cell=selected_cell, piece=selected_piece)
 
     @staticmethod
     def pieces_to_choices(pieces: list[Piece]) -> list[questionary.Choice]:
