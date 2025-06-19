@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.5] - 2025-06-19
+
+### 🐛 Bug Fixes
+
+- *(ci)* Force latest and semver tags
+
 ## [0.1.4] - 2025-06-19
 
 ### 🐛 Bug Fixes
 
 - *(ci)* Change publish trigger to release completion
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog for release v0.1.4
 
 ## [0.1.3] - 2025-06-19
 
