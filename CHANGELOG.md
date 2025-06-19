@@ -2,11 +2,21 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.6] - 2025-06-19
+
+### 🐛 Bug Fixes
+
+- *(ci)* Force latest and docker semver tag
+
 ## [0.1.5] - 2025-06-19
 
 ### 🐛 Bug Fixes
 
 - *(ci)* Force latest and semver tags
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog for release v0.1.5
 
 ## [0.1.4] - 2025-06-19
 
