@@ -47,33 +47,32 @@ class Agent(QuartoAgent):
         return ChooseInitialPieceResponse(piece=selected_piece)
 
     def complete_turn(self, game: GameState) -> CompleteTurnResponse:
-        # Assess game phase
         game_phase = self.evaluate_game_phase(game)
         logger.debug("Game phase evaluated as: %s (%d | 16)", game_phase.name, len(get_available_cells(game)))
 
         depth_limit = self.depth_limits[0]
 
-        def evaluation_function(board: Board) -> int:
-            return self.evaluate_board(board)
-
         if game_phase == self.GamePhase.EARLY_GAME:
 
             def evaluation_function(board: Board) -> int:
                 return self.evaluate_board(board) * -1
+        else:
+
+            def evaluation_function(board: Board) -> int:
+                return self.evaluate_board(board)
 
         if game_phase == self.GamePhase.LATE_GAME:
             depth_limit = self.depth_limits[2]
-
         elif game_phase == self.GamePhase.MID_GAME:
             depth_limit = self.depth_limits[1]
 
         score, cell, piece = self.minimax(
-            game.board,
-            get_available_pieces(game),
-            get_available_cells(game),
-            game.current_piece,
-            True,
-            depth_limit,
+            board=game.board,
+            available_pieces=get_available_pieces(game),
+            available_cells=get_available_cells(game),
+            current_piece=game.current_piece,
+            maximizing=True,
+            depth=depth_limit,
             cache=self.cache,
             evaluation_function=evaluation_function,
         )
@@ -185,7 +184,7 @@ class Agent(QuartoAgent):
     @classmethod
     def evaluate_game_phase(cls, game: GameState) -> GamePhase:
         lines = get_all_lines(game.board)
-        lines_with_common_pieces = [line if common_characteristics(line) else [] for line in lines]
+        lines_with_common_pieces = [line for line in lines if common_characteristics(line)]
         n_three_same = sum(1 for line in lines_with_common_pieces if len([p for p in line if p is not None]) == 3)
         n_two_same = sum(1 for line in lines_with_common_pieces if len([p for p in line if p is not None]) == 2)
 
