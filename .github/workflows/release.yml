@@ -37,7 +37,7 @@ jobs:
         run: |
           pdm run git-cliff --verbose --bump -o CHANGELOG.md
       - name: Set tag env variable
-        run: echo "NEW_TAG=v$(pdm run git-cliff --bumped-version)" >> $GITHUB_ENV
+        run: echo "NEW_TAG=$(pdm run git-cliff --bumped-version)" >> $GITHUB_ENV
 
       - name: Commit to main
         run: |
