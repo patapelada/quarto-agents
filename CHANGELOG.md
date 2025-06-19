@@ -2,7 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.2] - 2025-06-19
+## [0.1.4] - 2025-06-19
+
+### 🐛 Bug Fixes
+
+- *(ci)* Change publish trigger to release completion
+
+## [0.1.3] - 2025-06-19
 
 ### 🐛 Bug Fixes
 
@@ -14,6 +20,7 @@ All notable changes to this project will be documented in this file.
 
 - Update changelog for release vv0.1.2
 - Update changelog for release vv0.1.3
+- Update changelog for release v0.1.2
 
 ## [0.1.1] - 2025-06-19
 
