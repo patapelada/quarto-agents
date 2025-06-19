@@ -2,21 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
-## [0.1.3] - 2025-06-19
-
-### 🐛 Bug Fixes
-
-- *(ci)* Revert to semver without v
-
 ## [0.1.2] - 2025-06-19
 
 ### 🐛 Bug Fixes
 
 - *(ci)* Manually push tag on release
+- *(ci)* Revert to semver without v
+- Trigger release
 
 ### ⚙️ Miscellaneous Tasks
 
 - Update changelog for release vv0.1.2
+- Update changelog for release vv0.1.3
 
 ## [0.1.1] - 2025-06-19
 
