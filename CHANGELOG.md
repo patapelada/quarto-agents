@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.2] - 2025-06-19
+
+### 🐛 Bug Fixes
+
+- *(ci)* Manually push tag on release
+
 ## [0.1.1] - 2025-06-19
 
 ### 🐛 Bug Fixes
@@ -11,6 +17,7 @@ All notable changes to this project will be documented in this file.
 ### ⚙️ Miscellaneous Tasks
 
 - Update changelog for release 0.1.0
+- Update changelog for release v0.1.1
 
 ## [0.1.0] - 2025-06-19
 
