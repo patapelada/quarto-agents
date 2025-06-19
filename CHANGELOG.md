@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.1.1] - 2025-06-19
+
+### 🐛 Bug Fixes
+
+- *(ci)* Change tags from x.x.x to vx.x.x
+
+### ⚙️ Miscellaneous Tasks
+
+- Update changelog for release 0.1.0
+
 ## [0.1.0] - 2025-06-19
 
 ### 🚀 Features
