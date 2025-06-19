@@ -1,7 +1,6 @@
 name: Publish
 
 on:
-  workflow_dispatch:
   workflow_run:
     workflows: ["Release"]
     types:
@@ -45,6 +44,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           context: git
+          tags: |
+            type=ref,event=branch,pattern=latest,enable=true,priority=1000
+            type=ref,event=branch,pattern={{version}},enable=true,priority=900
+            type=ref,event=branch,pattern={{major}}.{{minor}},enable=true,priority=900
 
       - name: Build and push Docker image
         id: build-and-push
